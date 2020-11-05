@@ -60,4 +60,10 @@ public class ElementController {
                     return new ResponseEntity("\"element updated\"",HttpStatus.ACCEPTED);
                 });
     }
+    public Mono<ResponseEntity> delete(Long id) {
+        Mono<ElementDto> user =elementRepository.findById(id).switchIfEmpty(Mono.error(new NotFoundException(" element "+id)))
+                .map(ElementDto::new);
+        return Mono.when(user)
+                .then(this.elementRepository.deleteById(id).map(callback -> new ResponseEntity("\"element deleted\"", HttpStatus.ACCEPTED)));
+    }
 }

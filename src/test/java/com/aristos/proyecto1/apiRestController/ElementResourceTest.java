@@ -27,14 +27,36 @@ class ElementResourceTest {
     @Test
     void readById(){
         ElementDto elementDto = this.restService.restbuildert().get()
-                .uri(ElementResource.ELEMENTS+ElementResource.ID,"id")
+                .uri(ElementResource.ELEMENTS+ElementResource.ID,1L)
                 .exchange().expectStatus().isOk().expectBody(ElementDto.class)
                 .returnResult().getResponseBody();
         assertNotNull(elementDto);
-        assertEquals("id",elementDto.getId());
+        assertEquals(1L,elementDto.getId());
     }
-    //@Test
-    //void read(){
-    //    this.restService.restbuildert().get().uri(ElementResource.ELEMENTS).exchange().expectStatus().isOk();
-    //}
+    @Test
+    void read(){
+        this.restService.restbuildert().get().uri(ElementResource.ELEMENTS).exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void update(){
+        int[] newNum= {10,20,30};
+        ElementDto articleDto = new ElementDto(6L,"nombre5", "tipo5.-=","usuario4", true, newNum);
+        String get=
+                this.restService.restbuildert()
+                        .put().uri(ElementResource.ELEMENTS+ElementResource.ID,3L)
+                        .body(BodyInserters.fromObject(articleDto))
+                        .exchange()
+                        .expectStatus().isAccepted()
+                        .expectBody(String.class).returnResult().getResponseBody();
+        assertNotNull(get);
+        assertEquals("\"element updated\"", get);
+
+    }
+    @Test
+    void delete() {
+        String element = this.restService.restbuildert().delete()
+                .uri(ElementResource.ELEMENTS+ElementResource.ID, 1L)
+                .exchange().expectStatus().isOk().expectBody(String.class).returnResult().getResponseBody();
+    }
 }

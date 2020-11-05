@@ -31,8 +31,17 @@ public class ElementResource {
         return this.elementController.readById(id);
     }
 
-    //@GetMapping
-    //public Flux<ElementDto> read() {
-    //    return this.elementController.read();
-    //}
+    @GetMapping
+    public Flux<ElementDto> read() {
+        return this.elementController.read();
+    }
+
+    @PutMapping(value = ID)
+    public Mono<ResponseEntity> update(@PathVariable Long id, @RequestBody ElementDto elementDto){
+        return  this.elementController.update(id,elementDto);
+    }
+    @DeleteMapping(value = ID)
+    public Mono<ResponseEntity> deleteUser(@PathVariable Long id) {
+        return this.elementController.delete(id);
+    }
 }
